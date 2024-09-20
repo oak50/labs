@@ -61,6 +61,7 @@ plt.show()
 
 # QUESTION 4 
 
+'''
 import requests
 import streamlit as st
 # Conduct analysis:
@@ -88,20 +89,38 @@ st.title('Remedy Statistics')
 st.write(remedy_counts)
 
 # streamlit run remedy.py # had issues with this command
+'''
 
 # QUESTION 5
-
+'''
 # attempt to make api work
 import urllib.request
 import json
-url = 'https://www.eia.gov/opendata/browser/electricity' # Location of the API
-query = 'Recall?format=json&Electricity=Capability' # The query
+url = 'https://docs.mhw-db.com/' # Location of the API
+query = 'Recall?format=json&ailments' # The query
 response = urllib.request.urlopen(url+query)
 response_bytes = response.read()
 data = json.loads(response_bytes) # Convert response to json
 response.close()
 print(data) # print all of the data listing a sprain within the injury category
+'''
 
+import requests # used a different method because i was having trouble using the originalmethod with this api
+# kept getting a json error
+base_url = "https://mhw-db.com/monsters" # this is an api which stores data for different monsters
+headers = {
+    "Content-Type": "application/json"
+}
+params = {
+    "name": "Rathalos"
+}
+response = requests.get(base_url, headers=headers, params=params)
+if response.status_code == 200:
+    # Parse JSON data from the response
+    monsters_data = response.json()
+    print(monsters_data)
+else:
+    print(f"Failed to retrieve data. Status code: {response.status_code}")
 
 
 
