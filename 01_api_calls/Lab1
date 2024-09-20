@@ -30,6 +30,7 @@ response.close()
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 df = pd.DataFrame.from_dict(data) # convert data from api into a dataframe
 print(df['RemedyOptions'].value_counts())
@@ -47,7 +48,49 @@ for i in range(len(temp)):
 df['remedy'] = clean_values
 remedy_df = df['remedy']
 
-print(clean_values)
+print(clean_values) # not sure if this flattened the data successfully, but printed in comma-separated list
+
+print(df['remedy'].value_counts(), '\n') # value counts table
+from collections import Counter
+
+all_options = [item for sublist in clean_values if isinstance(sublist, list) for item in sublist] # attempted to make a bar graph
+option_counts = Counter(all_options)
+plt.bar(option_counts.keys(), option_counts.values())
+plt.xticks(rotation=90)
+plt.show()
+
+# QUESTION 4 
+
+import requests
+import streamlit as st
+# Conduct analysis:
+url = 'https://www.saferproducts.gov/RestWebServices/Recall'
+query = '?format=json&RecallTitle=Gas'
+header = {'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'}
+raw = requests.get(url+query,headers=header)
+data = raw.json()
+df = pd.DataFrame.from_dict(data)
+temp = df['RemedyOptions']
+clean_values = []
+for i in range(len(temp)):
+    if len(temp[i])>0:
+        values = []
+        for j in range(len(temp[i])):
+            values.append(temp[i][j]['Option'] )
+        clean_values.append(values)
+    else:
+        clean_values.append('')
+df['remedy'] = clean_values
+remedy_counts = df['remedy'].value_counts()
+# Create streamlit output:
+st.title('Remedy Statistics')
+st.write(remedy_counts)
+
+streamlit run remedy.py # had issues with this command
+
+# QUESTION 5
+
 
 
 
