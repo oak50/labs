@@ -47,7 +47,7 @@ for i in range(len(temp)):
 df['remedy'] = clean_values
 remedy_df = df['remedy']
 
-print(remedy_df)
+print(clean_values)
 
 
 
