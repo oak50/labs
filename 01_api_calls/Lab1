@@ -87,10 +87,20 @@ remedy_counts = df['remedy'].value_counts()
 st.title('Remedy Statistics')
 st.write(remedy_counts)
 
-streamlit run remedy.py # had issues with this command
+# streamlit run remedy.py # had issues with this command
 
 # QUESTION 5
 
+# attempt to make api work
+import urllib.request
+import json
+url = 'https://www.eia.gov/opendata/browser/electricity' # Location of the API
+query = 'Recall?format=json&Electricity=Capability' # The query
+response = urllib.request.urlopen(url+query)
+response_bytes = response.read()
+data = json.loads(response_bytes) # Convert response to json
+response.close()
+print(data) # print all of the data listing a sprain within the injury category
 
 
 
