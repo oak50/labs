@@ -34,7 +34,7 @@ import matplotlib.pyplot as plt
 
 df = pd.DataFrame.from_dict(data) # convert data from api into a dataframe
 print(df['RemedyOptions'].value_counts())
-
+'''
 temp = df['RemedyOptions']
 clean_values = []
 for i in range(len(temp)):
@@ -47,8 +47,22 @@ for i in range(len(temp)):
         clean_values.append('')
 df['remedy'] = clean_values
 remedy_df = df['remedy']
+'''
+temp = df['RemedyOptions']
+clean_values = []
+for i in range(len(temp)):
+    if len(temp[i])==1 :
+        clean_values.append( str(temp[i][0]['Option']) )
+    elif len(temp[i])>1:
+        countries = []
+        for j in range(len(temp[i])):
+            countries.append( temp[i][j]['Option'] )
+        clean_values.append( str(countries) )
+    else:
+        clean_values.append('')
+df['remedy'] = clean_values
 
-print(clean_values) # not sure if this flattened the data successfully, but printed in comma-separated list
+print( "flattened dictionary:", '\n', clean_values) # not sure if this flattened the data successfully, but printed in comma-separated list
 
 print(df['remedy'].value_counts(), '\n') # value counts table
 from collections import Counter
@@ -121,6 +135,27 @@ if response.status_code == 200:
     print(monsters_data)
 else:
     print(f"Failed to retrieve data. Status code: {response.status_code}")
+
+# wrangle the data and produce EDA results
+df = pd.DataFrame.from_dict(monsters_data) # convert data from api into a dataframe
+print(df.columns)
+
+''' CREATE HISTOGRAM FOR DIFFERENT RARITY LEVELS OF MONSETRS -- HAD ISSUES WITH THIS
+rarities = []
+if 'rarity' in monsters_data:
+    rarities.append(monsters_data['rarity'])
+
+# create a histogram which plots the distribution of values for monster rarity levels
+plt.hist(rarities, bins=range(min(rarities), max(rarities) + 2), edgecolor='black', align='left')
+
+plt.xlabel('Rarity Level')
+plt.ylabel('Number of Monsters')
+plt.title('Distribution of Monster Rarity Levels')
+
+# Display the histogram
+plt.show()
+'''
+
 
 
 

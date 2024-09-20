@@ -3,7 +3,6 @@ import streamlit as st
 import urllib.request
 import json
 
-
 """
 ## Dashboard Template
  
@@ -31,15 +30,15 @@ print(df.shape)
 
 df.head()
 
-temp = df['ManufacturerCountries']
+temp = df['RemedyOptions']
 clean_values = []
 for i in range(len(temp)):
     if len(temp[i])==1 :
-        clean_values.append( str(temp[i][0]['Country']) )
+        clean_values.append( str(temp[i][0]['Option']) )
     elif len(temp[i])>1:
         countries = []
         for j in range(len(temp[i])):
-            countries.append( temp[i][j]['Country'] )
+            countries.append( temp[i][j]['Option'] )
         clean_values.append( str(countries) )
     else:
         clean_values.append('')
