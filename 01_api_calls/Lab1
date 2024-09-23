@@ -104,18 +104,6 @@ st.write(remedy_counts)
 '''
 
 # QUESTION 5
-'''
-# attempt to make api work -- this method was unsuccessful
-import urllib.request
-import json
-url = 'https://docs.mhw-db.com/' # Location of the API
-query = 'Recall?format=json&ailments' # The query
-response = urllib.request.urlopen(url+query)
-response_bytes = response.read()
-data = json.loads(response_bytes) # Convert response to json
-response.close()
-print(data) # print all of the data listing a sprain within the injury category
-'''
 
 import requests # used a different method because i was having trouble using the originalmethod with this api
 # kept getting a json error
@@ -130,7 +118,8 @@ response = requests.get(base_url, headers=headers, params=params)
 if response.status_code == 200:
     # Parse JSON data from the response
     monsters_data = response.json()
-    print(monsters_data)
+    for i in range(3):
+     print(monsters_data) # print a little bit of the data
 else:
     print(f"Failed to retrieve data. Status code: {response.status_code}")
 
@@ -138,7 +127,8 @@ else:
 df = pd.DataFrame.from_dict(monsters_data) # convert data from api into a dataframe
 print(df.columns)
 
-df_cleaned = df.dropna() 
+df_cleaned = df.dropna() # drop null values
+print(df_cleaned.head(n=2)) # print first two rows
 
 '''
 
