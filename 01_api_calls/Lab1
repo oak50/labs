@@ -34,7 +34,7 @@ import matplotlib.pyplot as plt
 
 df = pd.DataFrame.from_dict(data) # convert data from api into a dataframe
 print(df['RemedyOptions'].value_counts())
-'''
+
 temp = df['RemedyOptions']
 clean_values = []
 for i in range(len(temp)):
@@ -47,7 +47,7 @@ for i in range(len(temp)):
         clean_values.append('')
 df['remedy'] = clean_values
 remedy_df = df['remedy']
-'''
+
 temp = df['RemedyOptions']
 clean_values = []
 for i in range(len(temp)):
@@ -63,19 +63,15 @@ for i in range(len(temp)):
 df['remedy'] = clean_values
 
 print( "flattened dictionary:", '\n', clean_values) # not sure if this flattened the data successfully, but printed in comma-separated list
+# resulted in a lot of empty values
 
-print(df['remedy'].value_counts(), '\n') # value counts table
-from collections import Counter
+print(df['RemedyOptions'].value_counts()) # value count table
 
-all_options = [item for sublist in clean_values if isinstance(sublist, list) for item in sublist] # attempted to make a bar graph
-option_counts = Counter(all_options)
-plt.bar(option_counts.keys(), option_counts.values())
-plt.xticks(rotation=90)
-plt.show()
-
-# QUESTION 4 
 
 '''
+# QUESTION 4 
+
+
 import requests
 import streamlit as st
 # Conduct analysis:
@@ -102,12 +98,13 @@ remedy_counts = df['remedy'].value_counts()
 st.title('Remedy Statistics')
 st.write(remedy_counts)
 
-# streamlit run remedy.py # had issues with this command
+# streamlit run remedy.py # had issues with this command. Commented out this code to ensure that the rest would run.
+
 '''
 
 # QUESTION 5
 '''
-# attempt to make api work
+# attempt to make api work -- this method was unsuccessful
 import urllib.request
 import json
 url = 'https://docs.mhw-db.com/' # Location of the API
@@ -140,7 +137,9 @@ else:
 df = pd.DataFrame.from_dict(monsters_data) # convert data from api into a dataframe
 print(df.columns)
 
-''' CREATE HISTOGRAM FOR DIFFERENT RARITY LEVELS OF MONSETRS -- HAD ISSUES WITH THIS
+'''
+
+CREATE HISTOGRAM FOR DIFFERENT RARITY LEVELS OF MONSTERS -- HAD ISSUES WITH THIS
 rarities = []
 if 'rarity' in monsters_data:
     rarities.append(monsters_data['rarity'])
@@ -154,8 +153,8 @@ plt.title('Distribution of Monster Rarity Levels')
 
 # Display the histogram
 plt.show()
+
+
 '''
-
-
 
 
