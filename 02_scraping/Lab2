@@ -1,0 +1,49 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+import requests # Page requests
+
+'''
+header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'} 
+url = 'https://charlottesville.craigslist.org/search/cta?purveyor=owner#search=1~gallery~0~0' 
+raw = requests.get(url,headers=header) # Get page
+     
+ '''
+
+header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'} 
+url = 'https://charlottesville.craigslist.org/search/ata?query=vintage%20toys#search=1~gallery~0~0' 
+raw = requests.get(url,headers=header) # Get page
+
+# beautiful soup
+
+from bs4 import BeautifulSoup as soup # HTML parser
+bsObj = soup(raw.content,'html.parser') # Parse the html
+listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
+
+import re # Regular expressions
+
+toy_types = ['car', 'truck', 'tractor', 'chest', 'bear', 'horse', 'playground']
+
+data = [] # We'll save our listings in this object
+for k in range( len(listings) ):
+    title = listings[k].find('div',class_='title').get_text().lower()
+    price = listings[k].find('div',class_='price').get_text()
+    link = listings[k].find(href=True)['href']
+    # Get brand from the title string:
+    words = title.split()
+    hits = [word for word in words if word in toy_types] # Find brands in the title
+    if len(hits) == 0:
+        type = 'missing'
+    else:
+        type = hits[0]
+    # Get years from title string:
+    regex_search = re.search(r'20[0-9][0-9]|19[0-9][0-9]', title ) # Find year references
+    if regex_search is None: # If no hits, record year as missing value
+        year = np.nan 
+    else: # If hits, record year as first match
+        year = regex_search.group(0)
+    #
+    data.append({'title':title,'price':price,'year':year,'link':link,'toy type':type})
