@@ -1,3 +1,4 @@
+
 # QUESTION 1
 
         # https://www.saferproducts.gov/RestWebServices/Recall?format=json&ProductType=Phone
@@ -136,6 +137,8 @@ else:
 # wrangle the data and produce EDA results
 df = pd.DataFrame.from_dict(monsters_data) # convert data from api into a dataframe
 print(df.columns)
+
+df_cleaned = df.dropna() 
 
 '''
 
