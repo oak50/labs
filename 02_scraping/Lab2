@@ -13,11 +13,18 @@ raw = requests.get(url,headers=header) # Get page
      
  '''
 
+# QUESTION 1
+# using craigslist page with vintage toys
+# Would collect info about the types of toys being sold (ex: toy cars, stuffed bears, etc.). EDA analysis could include
+# finding the most popular buzzwords/ toy types sold, the distribution of prices, and the distribution of years
+# of origin for toys sold
+
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'} 
 url = 'https://charlottesville.craigslist.org/search/ata?query=vintage%20toys#search=1~gallery~0~0' 
 raw = requests.get(url,headers=header) # Get page
 
-# beautiful soup
+# QUESTION 2
+# use beautiful soup to extract data
 
 from bs4 import BeautifulSoup as soup # HTML parser
 bsObj = soup(raw.content,'html.parser') # Parse the html
@@ -25,7 +32,7 @@ listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
 
 import re # Regular expressions
 
-toy_types = ['car', 'truck', 'tractor', 'chest', 'bear', 'horse', 'playground']
+toy_types = ['car', 'truck', 'tractor', 'chest', 'bear', 'horse', 'playground'] # collecting text data about toy types
 
 data = [] # We'll save our listings in this object
 for k in range( len(listings) ):
@@ -47,3 +54,46 @@ for k in range( len(listings) ):
         year = regex_search.group(0)
     #
     data.append({'title':title,'price':price,'year':year,'link':link,'toy type':type})
+
+# QUESTION 3
+
+## Wrangle the data
+df = pd.DataFrame.from_dict(data)
+df['price'] = df['price'].str.replace('$','')
+df['price'] = df['price'].str.replace(',','')
+df['price'] = pd.to_numeric(df['price'],errors='coerce')
+df['year'] = pd.to_numeric(df['year'],errors='coerce')
+df['age'] = 2025-df['year']
+print(df.shape)
+df.to_csv('craigslist_cville_vintage_toys.csv') # Save data in case of a disaster
+df.head()
+
+# EDA for price and age:
+print(df['price'].describe())
+df['price'].hist(grid=False)
+plt.show()
+print(df['age'].describe())
+df['age'].hist(grid=False)
+plt.show()
+
+# Price by brand:
+df.loc[:,['price','type']].groupby('type').describe()
+
+# Age by brand:
+df.loc[:,['age','type']].groupby('type').describe()
+
+# scatterplot
+ax = sns.scatterplot(data=df, x='age', y='price',hue='type')
+sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+
+
+df['log_price'] = np.log(df['price'])
+df['log_age'] = np.log(df['age'])
+
+ax = sns.scatterplot(data=df, x='log_age', y='log_price',hue='type')
+sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+
+print(df.loc[:,['log_price','log_age']].cov())
+print(df.loc[:,['log_price','log_age']].corr())
+
+sns.jointplot(data=df, x='log_age', y='log_price',kind='hex')
