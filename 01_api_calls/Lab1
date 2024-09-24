@@ -72,7 +72,8 @@ print(df['RemedyOptions'].value_counts()) # value count table
 
 remedy_counts = df['RemedyOptions'].value_counts()
 
-plt.figure(figsize=(10,6)) # attempt to make a bar graph showing the different types of remedies -- this didn't work
+plt.figure(figsize=(10,6)) # attempt to make a bar graph showing the different types of remedies -- this didn't work, 
+# likely becasue of the way I stored the remedy options data
 remedy_counts.plot(kind='bar', color='skyblue')
 plt.title('Counts of Different Remedy Options')
 plt.xlabel('Remedy Options')
@@ -80,7 +81,6 @@ plt.ylabel('Count')
 plt.xticks(rotation=45, ha='right')
 plt.tight_layout()
 
-# Show plot
 plt.show()
 
 '''
@@ -147,6 +147,7 @@ print(df_cleaned.head(n=2)) # print first two rows
 '''
 
 CREATE HISTOGRAM FOR DIFFERENT RARITY LEVELS OF MONSTERS -- HAD ISSUES WITH THIS
+# again, i think i stored the rarity data incorrectly
 rarities = []
 if 'rarity' in monsters_data:
     rarities.append(monsters_data['rarity'])
