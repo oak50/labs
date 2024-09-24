@@ -59,8 +59,8 @@ for k in range( len(listings) ):
 
 ## Wrangle the data
 df = pd.DataFrame.from_dict(data)
-df['price'] = df['price'].str.replace('$','')
-df['price'] = df['price'].str.replace(',','')
+df['price'] = df['price'].str.replace('$','', regex=False)
+df['price'] = df['price'].str.replace(',','', regex=False)
 df['price'] = pd.to_numeric(df['price'],errors='coerce')
 df['year'] = pd.to_numeric(df['year'],errors='coerce')
 df['age'] = 2025-df['year']
