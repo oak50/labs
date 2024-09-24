@@ -68,6 +68,20 @@ print( "flattened dictionary:", '\n', clean_values) # not sure if this flattened
 
 print(df['RemedyOptions'].value_counts()) # value count table
 
+remedy_counts = df['RemedyOptions'].value_counts()
+
+plt.figure(figsize=(10,6)) # attempt to make a bar graph showing the different types of remedies -- this didn't work
+remedy_counts.plot(kind='bar', color='skyblue')
+plt.title('Counts of Different Remedy Options')
+plt.xlabel('Remedy Options')
+plt.ylabel('Count')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+
+# Show plot
+plt.show()
+
+
 
 '''
 # QUESTION 4 
@@ -102,7 +116,7 @@ st.write(remedy_counts)
 # streamlit run remedy.py # had issues with this command. Commented out this code to ensure that the rest would run.
 
 '''
-
+'''
 # QUESTION 5
 
 import requests # used a different method because i was having trouble using the originalmethod with this api
@@ -131,7 +145,7 @@ df_cleaned = df.dropna() # drop null values
 print(df_cleaned.head(n=2)) # print first two rows
 
 '''
-
+'''
 CREATE HISTOGRAM FOR DIFFERENT RARITY LEVELS OF MONSTERS -- HAD ISSUES WITH THIS
 rarities = []
 if 'rarity' in monsters_data:
@@ -147,7 +161,7 @@ plt.title('Distribution of Monster Rarity Levels')
 # Display the histogram
 plt.show()
 
-
+'''
 '''
 
-
+'''
