@@ -6,6 +6,11 @@ import seaborn as sns
 
 import requests # Page requests
 
+from bs4 import BeautifulSoup as soup # HTML parser
+import re # Regular expressions
+import time # Time delays
+import random # Random numbers
+
 '''
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'} 
 url = 'https://charlottesville.craigslist.org/search/cta?purveyor=owner#search=1~gallery~0~0' 
@@ -33,6 +38,9 @@ listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
 import re # Regular expressions
 
 toy_types = ['car', 'truck', 'tractor', 'chest', 'bear', 'horse', 'playground'] # collecting text data about toy types
+
+bsObj = soup(raw.content,'html.parser') # Parse the html
+listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
 
 data = [] # We'll save our listings in this object
 for k in range( len(listings) ):
