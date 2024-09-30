@@ -77,21 +77,24 @@ df.to_csv('craigslist_cville_boats.csv') # Save data in case of a disaster
 df.head()
 
 # EDA for price and age:
+
+# create histogram for distribution of product price
 print(df['price'].describe())
 df['price'].hist(grid=False)
 plt.show()
 plt.savefig( "price_hist.png")
 
+# create histogram for distribution of product age
 print(df['age'].describe())
 df['age'].hist(grid=False)
 plt.show()
-plt.savefig( "age_hist.png")
+plt.savefig("age_hist.png")
 
-# Price by brand:
-print( "price by brand: \n", df.loc[:,['price','brand']].groupby('brand').describe() )
+# Price by brand chart:
+print("price by brand: \n", df.loc[:,['price','brand']].groupby('brand').describe() )
 
-# Age by brand:
-print( "age by brand: \n", df.loc[:,['age','brand']].groupby('brand').describe() )
+# Age by brand chart:
+print("age by brand: \n", df.loc[:,['age','brand']].groupby('brand').describe() )
 
 # scatterplot: age and price by brand
 plt.figure(figsize=(12, 6)) 
@@ -101,21 +104,29 @@ plt.xlim(0, 50)  # Set x-axis range from 0 to 20,000
 plt.show()
 plt.savefig("age_price_boatscatter")
 
-# i did not collect enough data to make a conclusive prediction form this scatterplot. However, it appears that 
-# there is a negative correlation between age and price acros brands.
+# There are very few points in this graph, with only a few brands represented. However, it appears that 
+# there is a negative correlation between the age and price of boats, regardless of brand.
 
-df['log_price'] = np.log(df['price'])
+df['log_price'] = np.log(df['price']) # apply log function to normalize the distribution / reduce impact of outliers
 df['log_age'] = np.log(df['age'])
 
 ax = sns.scatterplot(data=df, x='log_age', y='log_price',hue='brand')
 sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
 plt.show()
-plt.savefig("age_price_boatscatter_log")
+plt.savefig("age_price_boatscatter_log") # applying the log function had a minimal effect on the scatterplot
 
-print(df.loc[:,['log_price','log_age']].cov())
-print(df.loc[:,['log_price','log_age']].corr())
+print("Covariance of price and age: \n", df.loc[:,['log_price','log_age']].cov())
+# the covariance between log_age and log_price is -0.584. This indicates that as age moves positively, 
+# price moves negatively
 
+print("Correlation between price and age: \n", df.loc[:,['log_price','log_age']].corr())
+# the correlation between price and age is -0.892. This indicates that for a 1% increase in boat age corresponds to an 
+# average decrease in price of 0.89%.
+
+# create jointplot of age and price
 sns.jointplot(data=df, x='log_age', y='log_price',kind='hex')
 plt.show()
 plt.savefig("age_price_joint")
+
+
 
