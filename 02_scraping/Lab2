@@ -11,12 +11,12 @@ import re # Regular expressions
 import time # Time delays
 import random # Random numbers
 
-'''
-header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'} 
-url = 'https://charlottesville.craigslist.org/search/cta?purveyor=owner#search=1~gallery~0~0' 
-raw = requests.get(url,headers=header) # Get page
+
+#header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'} 
+#url = 'https://charlottesville.craigslist.org/search/cta?purveyor=owner#search=1~gallery~0~0' 
+#raw = requests.get(url,headers=header) # Get page
      
- '''
+
 
 # QUESTION 1
 # using craigslist page with vintage toys
@@ -37,7 +37,7 @@ listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
 
 import re # Regular expressions
 
-brands = ['nucanoe', 'rinker', 'triton', 'yamaha', "grady white", "carolina skiff", "honda", "pelican", "mariah", "trophy", "baja", "buddy davis"] # collecting text data about boat types
+brands = ['yamaha', "honda", "mariah", "trophy"] # collecting text data about boat types
 
 bsObj = soup(raw.content,'html.parser') # Parse the html
 listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
@@ -93,7 +93,7 @@ print( "price by brand: \n", df.loc[:,['price','brand']].groupby('brand').descri
 # Age by brand:
 print( "age by brand: \n", df.loc[:,['age','brand']].groupby('brand').describe() )
 
-# scatterplot
+# scatterplot: age and price by brand
 plt.figure(figsize=(12, 6)) 
 ax = sns.scatterplot(data=df, x='age', y='price', hue='brand')
 sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
@@ -101,6 +101,8 @@ plt.xlim(0, 50)  # Set x-axis range from 0 to 20,000
 plt.show()
 plt.savefig("age_price_boatscatter")
 
+# i did not collect enough data to make a conclusive prediction form this scatterplot. However, it appears that 
+# there is a negative correlation between age and price acros brands.
 
 df['log_price'] = np.log(df['price'])
 df['log_age'] = np.log(df['age'])
@@ -116,3 +118,4 @@ print(df.loc[:,['log_price','log_age']].corr())
 sns.jointplot(data=df, x='log_age', y='log_price',kind='hex')
 plt.show()
 plt.savefig("age_price_joint")
+
