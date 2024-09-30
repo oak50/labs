@@ -25,7 +25,7 @@ raw = requests.get(url,headers=header) # Get page
 # of origin for toys sold
 
 header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0'} 
-url = 'https://charlottesville.craigslist.org/search/ata?query=vintage%20toys#search=1~gallery~0~0' 
+url = 'https://charlottesville.craigslist.org/search/boo#search=1~gallery~0~0' 
 raw = requests.get(url,headers=header) # Get page
 
 # QUESTION 2
@@ -37,7 +37,7 @@ listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
 
 import re # Regular expressions
 
-toy_types = ['car', 'truck', 'tractor', 'chest', 'bear', 'horse', 'playground'] # collecting text data about toy types
+brands = ['nucanoe', 'rinker', 'triton', 'yamaha', "grady white", "carolina skiff", "honda", "pelican", "mariah", "trophy", "baja", "buddy davis"] # collecting text data about boat types
 
 bsObj = soup(raw.content,'html.parser') # Parse the html
 listings = bsObj.find_all(class_="cl-static-search-result") # Find all listings
@@ -49,11 +49,11 @@ for k in range( len(listings) ):
     link = listings[k].find(href=True)['href']
     # Get brand from the title string:
     words = title.split()
-    hits = [word for word in words if word in toy_types] # Find brands in the title
+    hits = [word for word in words if word in brands] # Find brands in the title
     if len(hits) == 0:
-        type = 'missing'
+        brand = 'missing'
     else:
-        type = hits[0]
+        brand = hits[0]
     # Get years from title string:
     regex_search = re.search(r'20[0-9][0-9]|19[0-9][0-9]', title ) # Find year references
     if regex_search is None: # If no hits, record year as missing value
@@ -61,7 +61,7 @@ for k in range( len(listings) ):
     else: # If hits, record year as first match
         year = regex_search.group(0)
     #
-    data.append({'title':title,'price':price,'year':year,'link':link,'toy type':type})
+    data.append({'title':title,'price':price,'year':year,'link':link,'brand':brand})
 
 # QUESTION 3
 
@@ -73,35 +73,46 @@ df['price'] = pd.to_numeric(df['price'],errors='coerce')
 df['year'] = pd.to_numeric(df['year'],errors='coerce')
 df['age'] = 2025-df['year']
 print(df.shape)
-df.to_csv('craigslist_cville_vintage_toys.csv') # Save data in case of a disaster
+df.to_csv('craigslist_cville_boats.csv') # Save data in case of a disaster
 df.head()
 
 # EDA for price and age:
 print(df['price'].describe())
 df['price'].hist(grid=False)
 plt.show()
+plt.savefig( "price_hist.png")
+
 print(df['age'].describe())
 df['age'].hist(grid=False)
 plt.show()
+plt.savefig( "age_hist.png")
 
 # Price by brand:
-df.loc[:,['price','type']].groupby('type').describe()
+print( "price by brand: \n", df.loc[:,['price','brand']].groupby('brand').describe() )
 
 # Age by brand:
-df.loc[:,['age','type']].groupby('type').describe()
+print( "age by brand: \n", df.loc[:,['age','brand']].groupby('brand').describe() )
 
 # scatterplot
-ax = sns.scatterplot(data=df, x='age', y='price',hue='type')
+plt.figure(figsize=(12, 6)) 
+ax = sns.scatterplot(data=df, x='age', y='price', hue='brand')
 sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+plt.xlim(0, 50)  # Set x-axis range from 0 to 20,000
+plt.show()
+plt.savefig("age_price_boatscatter")
 
 
 df['log_price'] = np.log(df['price'])
 df['log_age'] = np.log(df['age'])
 
-ax = sns.scatterplot(data=df, x='log_age', y='log_price',hue='type')
+ax = sns.scatterplot(data=df, x='log_age', y='log_price',hue='brand')
 sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+plt.show()
+plt.savefig("age_price_boatscatter_log")
 
 print(df.loc[:,['log_price','log_age']].cov())
 print(df.loc[:,['log_price','log_age']].corr())
 
 sns.jointplot(data=df, x='log_age', y='log_price',kind='hex')
+plt.show()
+plt.savefig("age_price_joint")
