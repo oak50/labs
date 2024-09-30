@@ -127,6 +127,8 @@ print("Correlation between price and age: \n", df.loc[:,['log_price','log_age']]
 sns.jointplot(data=df, x='log_age', y='log_price',kind='hex')
 plt.show()
 plt.savefig("age_price_joint")
+# the hexogonal bins on this plot are very large and few, which indicates underfitting. It's difficult 
+# to make any assumptions from this graph.
 
 
 
