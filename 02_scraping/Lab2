@@ -272,3 +272,7 @@ df['age'] = pd.to_numeric(df['age'],errors='coerce')
 df['year'] = pd.to_numeric(df['year'],errors='coerce')
 df.to_csv('craiglist_cville_boats_long.csv')
 
+ax = sns.scatterplot(data=df, x='age', y='price',hue='brand')
+sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1))
+plt.show()
+plt.savefig( "age_price_brand_new.png" )
